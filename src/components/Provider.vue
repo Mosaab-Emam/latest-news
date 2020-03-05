@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     handleSelection() {
-      store.commit("handleSelection", this.provider.title);
+      store.commit("handleSelection", this.provider);
     }
   }
 };
