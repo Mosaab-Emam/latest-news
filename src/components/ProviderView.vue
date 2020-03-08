@@ -1,14 +1,16 @@
 <template>
   <div class="provider-view">
     <div class="top-rec">
-      <a href="" v-text="provider.title"></a>
+      <a :href="provider.webUrl" target="_blank" v-text="provider.title"></a>
     </div>
     <div class="main">
-      <NewsBox
-        v-for="(item, index) in news"
-        :key="index"
-        :title="item.title"
-      />
+      <template v-for="(item, index) in news">
+        <NewsBox
+          :key="index"
+          :item="item"
+        />
+        <hr :key="`hr_${index}`">
+      </template>
     </div>
   </div>
 </template>
@@ -33,16 +35,72 @@ export default {
       .then(data => {
         if (this.provider.title === "The New York Times") {
           data.results.forEach(result => {
-            this.news.push({ title: result.title });
+            const pub = this.getPubDate(result.created_date);
+            const webUrl = result.url;
+            this.news.push({
+              title: result.title,
+              pub,
+              webUrl
+            });
           });
-          console.log(this.news);
         } else if (this.provider.title === "The Guardian") {
           data.response.results.forEach(result => {
-            this.news.push({ title: result.webTitle });
+            const pub = this.getPubDate(result.webPublicationDate);
+            const webUrl = result.webUrl;
+            this.news.push({
+              title: result.webTitle,
+              pub,
+              webUrl
+            });
           });
-          console.log(this.news);
         }
       });
+  },
+  methods: {
+    getPubDate(date) {
+      const [, monthNumber, day] = date.split("T")[0].split("-");
+      let monthName;
+      switch (monthNumber) {
+        case "01":
+          monthName = "Jan";
+          break;
+        case "02":
+          monthName = "Feb";
+          break;
+        case "03":
+          monthName = "Mar";
+          break;
+        case "04":
+          monthName = "Apr";
+          break;
+        case "05":
+          monthName = "May";
+          break;
+        case "06":
+          monthName = "Jun";
+          break;
+        case "07":
+          monthName = "Jul";
+          break;
+        case "08":
+          monthName = "Aug";
+          break;
+        case "09":
+          monthName = "Sep";
+          break;
+        case "10":
+          monthName = "Oct";
+          break;
+        case "11":
+          monthName = "Nov";
+          break;
+        case "12":
+          monthName = "Dec";
+          break;
+      }
+
+      return `${monthName} ${day - "0"}`;
+    }
   }
 };
 </script>
