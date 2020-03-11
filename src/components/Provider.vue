@@ -3,7 +3,7 @@
         <input :id="`provider_${index}`" type="checkbox" v-model="selected">
         <label :for="`provider_${index}`" :class="selected && 'selected'" @click="handleSelection">
             <div class="logo">
-                <img :src="provider.logoUrl" :alt="`${provider.title}'s Logo`">
+                <img :src="parseLogo(provider.logoUrl)" :alt="`${provider.title}'s Logo`">
             </div>
             <h3 v-text="provider.title"></h3>
         </label>
@@ -27,6 +27,9 @@ export default {
   methods: {
     handleSelection() {
       store.commit("handleSelection", this.provider);
+    },
+    parseLogo(img) {
+      return require(`@/assets/${img}`);
     }
   }
 };
